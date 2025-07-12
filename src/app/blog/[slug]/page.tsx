@@ -1,23 +1,26 @@
-import { notFound } from "next/navigation";
 import blogData from "@/components/Blog/blogData";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 
-interface PageProps {
-  params: { slug: string };
+// Explicit return type to avoid TypeScript confusion in Next.js 15
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  return blogData.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
-// Helper to get post
-function getPostBySlug(slug: string) {
-  return blogData.find((post) => post.slug === slug);
-}
+type Props = {
+  params: {
+    slug: string;
+  };
+};
 
-// ✅ MUST be async function when using dynamic params
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await Promise.resolve(params); // Await ensures correct type handling
+export default function BlogPostPage({ params }: Props) {
+  const post = blogData.find((item) => item.slug === params.slug);
 
-  const post = getPostBySlug(slug);
-
-  if (!post) notFound();
+  if (!post) {
+    notFound();
+  }
 
   return (
     <div className="container mx-auto py-12 px-4 md:px-8">
@@ -39,11 +42,4 @@ export default async function BlogPostPage({ params }: PageProps) {
       </div>
     </div>
   );
-}
-
-// Required for static export
-export async function generateStaticParams() {
-  return blogData.map((post) => ({
-    slug: post.slug,
-  }));
 }
