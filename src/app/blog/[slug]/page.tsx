@@ -1,23 +1,23 @@
-import { notFound } from 'next/navigation';
-import blogData from '@/components/Blog/blogData';
-import Image from 'next/image';
+import { notFound } from "next/navigation";
+import blogData from "@/components/Blog/blogData";
+import Image from "next/image";
 
 interface PageProps {
   params: { slug: string };
 }
 
-// Helper function to find blog by slug
+// Helper to get post
 function getPostBySlug(slug: string) {
   return blogData.find((post) => post.slug === slug);
 }
 
-// Dynamic route page
-export default function BlogPostPage({ params }: PageProps) {
-  const post = getPostBySlug(params.slug);
+// ✅ MUST be async function when using dynamic params
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await Promise.resolve(params); // Await ensures correct type handling
 
-  if (!post) {
-    notFound();
-  }
+  const post = getPostBySlug(slug);
+
+  if (!post) notFound();
 
   return (
     <div className="container mx-auto py-12 px-4 md:px-8">
@@ -33,7 +33,7 @@ export default function BlogPostPage({ params }: PageProps) {
         className="rounded-md mb-6"
       />
       <div className="prose dark:prose-invert max-w-none">
-        {post.content.split('\n').map((p, i) => (
+        {post.content.split("\n").map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
@@ -41,7 +41,7 @@ export default function BlogPostPage({ params }: PageProps) {
   );
 }
 
-// Required for static export (with output: "export")
+// Required for static export
 export async function generateStaticParams() {
   return blogData.map((post) => ({
     slug: post.slug,
