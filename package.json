@@ -3,9 +3,9 @@
   "version": "2.2.0",
   "private": true,
   "scripts": {
+    "build": "next build && next export",
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "start": "serve out",
     "lint": "next lint"
   },
   "dependencies": {
