@@ -1,3 +1,4 @@
+// src/app/blog/[slug]/page.tsx
 import blogData from '@/components/Blog/blogData';
 
 export function generateStaticParams() {
@@ -9,7 +10,7 @@ export default function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
-  const post = blogData.find(p => p.slug === params.slug);
+  const post = blogData.find((p) => p.slug === params.slug);
   if (!post) return <div>Not found</div>;
 
   return (
