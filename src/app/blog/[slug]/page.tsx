@@ -1,12 +1,11 @@
-// app/blog/[slug]/page.tsx
 import blogData from '@/components/Blog/blogData';
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return blogData.map(post => ({ slug: post.slug }));
 }
 
 export default function BlogPostPage({
-  params
+  params,
 }: {
   params: { slug: string };
 }) {
